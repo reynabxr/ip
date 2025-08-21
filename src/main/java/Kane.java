@@ -34,10 +34,40 @@ public class Kane {
                     System.out.println("  " + t);
                 }
             } else {
-                Task task = new Task(input);
+                Task task = null;
+                if (input.startsWith("todo ")) {
+                    task = new ToDo(input);
+                } else if (input.startsWith("deadline ")) {
+                    // Remove the "deadline " prefix
+                    input.replaceFirst("deadline ", "");
+
+                    // Split on "/by"
+                    String[] parts = input.split("/by", 2);
+
+                    String description = parts[0].trim();
+                    String by = parts[1].trim();
+
+                    task = new Deadline(description, by);
+                } else if (input.startsWith("event ")) {
+                    // Remove the "event " prefix
+                    input.replaceFirst("event ", "");
+                    // First split on "/from"
+                    String[] firstSplit = input.split("/from", 2);
+                    String description = firstSplit[0].trim(); // "project meeting"
+
+                    // Second split on "/to"
+                    String[] secondSplit = firstSplit[1].split("/to", 2);
+                    String from = secondSplit[0].trim();
+                    String to = secondSplit[1].trim();
+
+                    task = new Event(description, from, to);
+                }
+
                 allTasks.add(task);
                 end++;
-                System.out.println("added: " + input);
+                System.out.println("Got it. I've added this task:");
+                System.out.println(task);
+                System.out.println(String.format("Now you have %d tasks in the list.", end));
             }
             input = sc.nextLine();
         }
