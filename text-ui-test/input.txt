@@ -12,4 +12,6 @@ todo
 event
 deadline
 haha
+delete 10
+delete 1
 bye
