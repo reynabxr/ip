@@ -27,4 +27,9 @@ Here are the tasks in your list:
 1.[T] [X] borrow book
 2.[D] [ ] return book (by: Sunday)
 3.[E] [ ] project meeting (from: Mon 2pm to: 4pm)
+OOPS!!! The task number is invalid.
+OOPS!!! The description of a todo cannot be empty.
+OOPS!!! The event must have both /from and /to times.
+OOPS!!! The deadline must have a /by time.
+OOPS!!! I'm sorry, but I don't know what that means :-(
 Bye! Hope to see you soon!
