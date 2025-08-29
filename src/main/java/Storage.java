@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,64 +11,62 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public ArrayList<Task> load() {
+    public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
 
-        // Create file and parent dirs if they don't exist
-        try {
-            File parent = file.getParentFile();
-            if (parent != null) {
-                parent.mkdirs();
-            }
-            if (!file.exists()) {
-                file.createNewFile();
-                return tasks; // return empty list
-            }
-        } catch (IOException e) {
-            System.out.println("Error creating file: " + e.getMessage());
-            return tasks;
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+            return tasks; // Return empty list if file is new
         }
 
-        try (Scanner sc = new Scanner(file)) {
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                String[] parts = line.split(" \\| ");
-                Task task;
-
-                switch (parts[0]) {
-                    case "T":
-                        task = new ToDo(parts[2]);
-                        break;
-                    case "D":
-                        task = new Deadline(parts[2], parts[3]);
-                        break;
-                    case "E":
-                        task = new Event(parts[2], parts[3], parts[4]);
-                        break;
-                    default:
-                        continue;
-                }
-                if (parts[1].equals("1")) {
-                    task.markDone();
-                }
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNext()) {
+            String line = scanner.nextLine();
+            Task task = parseLineToTask(line);
+            if (task != null) {
                 tasks.add(task);
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
         }
-
+        scanner.close();
         return tasks;
     }
 
-    public void save(ArrayList<Task> tasks) {
-        try (FileWriter fw = new FileWriter(filePath)) {
-            for (Task task : tasks) {
-                fw.write(task.toFileString() + System.lineSeparator());
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving tasks: " + e.getMessage());
+    private Task parseLineToTask(String line) {
+        String[] parts = line.split(" \\| ");
+        String type = parts[0];
+        boolean isDone = parts[1].equals("1");
+        String description = parts[2];
+        Task task = null;
+
+        switch (type) {
+            case "T":
+                task = new ToDo(description);
+                break;
+            case "D":
+                task = new Deadline(description, parts[3]);
+                break;
+            case "E":
+                task = new Event(description, parts[3], parts[4]);
+                break;
         }
+
+        if (task != null && isDone) {
+            task.markDone();
+        }
+        return task;
     }
 
+    public void save(ArrayList<Task> tasks) {
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            for (Task task : tasks) {
+                writer.write(task.toFileString() + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error saving tasks to file: " + e.getMessage());
+        }
+    }
 }
