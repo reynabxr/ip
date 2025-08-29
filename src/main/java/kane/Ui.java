@@ -1,3 +1,5 @@
+package kane;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,7 +11,7 @@ public class Ui {
     }
 
     public void showWelcome() {
-        System.out.println("Hello! I'm Kane.\n" + "What can I do for you?");
+        System.out.println("Hello! I'm kane.Kane.\n" + "What can I do for you?");
     }
 
     public void showGoodbye() {

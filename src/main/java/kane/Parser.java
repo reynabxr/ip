@@ -1,3 +1,5 @@
+package kane;
+
 public class Parser {
 
     public static String getCommandWord(String fullCommand) {

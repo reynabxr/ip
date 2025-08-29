@@ -1,3 +1,5 @@
+package kane;
+
 public class Kane {
 
     private final Storage storage;
@@ -5,7 +7,7 @@ public class Kane {
     private final Ui ui;
 
     /**
-     * Constructor for the Kane application.
+     * Constructor for the kane.Kane application.
      * @param filePath The path to the file where tasks are stored.
      */
     public Kane(String filePath) {

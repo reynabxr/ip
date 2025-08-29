@@ -1,3 +1,5 @@
+package kane;
+
 public enum TaskType {
     TODO("T"),
     DEADLINE("D"),
