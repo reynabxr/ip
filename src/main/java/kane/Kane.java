@@ -31,52 +31,51 @@ public class Kane {
             try {
                 String fullCommand = ui.readCommand();
                 String commandWord = Parser.getCommandWord(fullCommand);
-
                 switch (commandWord) {
-                    case "bye":
-                        isExit = true;
-                        break;
-                    case "list":
-                        ui.showTaskList(tasks.getTasks());
-                        break;
-                    case "mark":
-                        int markIndex = Parser.parseIndex(fullCommand);
-                        Task markedTask = tasks.markTask(markIndex);
-                        ui.showTaskMarked(markedTask);
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "unmark":
-                        int unmarkIndex = Parser.parseIndex(fullCommand);
-                        Task unmarkedTask = tasks.unmarkTask(unmarkIndex);
-                        ui.showTaskUnmarked(unmarkedTask);
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "delete":
-                        int deleteIndex = Parser.parseIndex(fullCommand);
-                        Task deletedTask = tasks.deleteTask(deleteIndex);
-                        ui.showTaskDeleted(deletedTask, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "todo":
-                        Task newTodo = Parser.parseTodo(fullCommand);
-                        tasks.addTask(newTodo);
-                        ui.showTaskAdded(newTodo, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "deadline":
-                        Task newDeadline = Parser.parseDeadline(fullCommand);
-                        tasks.addTask(newDeadline);
-                        ui.showTaskAdded(newDeadline, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "event":
-                        Task newEvent = Parser.parseEvent(fullCommand);
-                        tasks.addTask(newEvent);
-                        ui.showTaskAdded(newEvent, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    default:
-                        throw new KaneException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+                case "bye":
+                    isExit = true;
+                    break;
+                case "list":
+                    ui.showTaskList(tasks.getTasks());
+                    break;
+                case "mark":
+                    int markIndex = Parser.parseIndex(fullCommand);
+                    Task markedTask = tasks.markTask(markIndex);
+                    ui.showTaskMarked(markedTask);
+                    storage.save(tasks.getTasks());
+                    break;
+                case "unmark":
+                    int unmarkIndex = Parser.parseIndex(fullCommand);
+                    Task unmarkedTask = tasks.unmarkTask(unmarkIndex);
+                    ui.showTaskUnmarked(unmarkedTask);
+                    storage.save(tasks.getTasks());
+                    break;
+                case "delete":
+                    int deleteIndex = Parser.parseIndex(fullCommand);
+                    Task deletedTask = tasks.deleteTask(deleteIndex);
+                    ui.showTaskDeleted(deletedTask, tasks.getSize());
+                    storage.save(tasks.getTasks());
+                    break;
+                case "todo":
+                    Task newTodo = Parser.parseTodo(fullCommand);
+                    tasks.addTask(newTodo);
+                    ui.showTaskAdded(newTodo, tasks.getSize());
+                    storage.save(tasks.getTasks());
+                    break;
+                case "deadline":
+                    Task newDeadline = Parser.parseDeadline(fullCommand);
+                    tasks.addTask(newDeadline);
+                    ui.showTaskAdded(newDeadline, tasks.getSize());
+                    storage.save(tasks.getTasks());
+                    break;
+                case "event":
+                    Task newEvent = Parser.parseEvent(fullCommand);
+                    tasks.addTask(newEvent);
+                    ui.showTaskAdded(newEvent, tasks.getSize());
+                    storage.save(tasks.getTasks());
+                    break;
+                default:
+                    throw new KaneException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
             } catch (KaneException e) {
                 ui.showError(e.getMessage());
