@@ -1,11 +1,29 @@
 package kane;
 
+/**
+ * Parses user input commands into structured objects such as {@code ToDo}, {@code Deadline}, and {@code Event}.
+ * Provides helper methods to extract command words, task indexes, and task details.
+ */
 public class Parser {
 
+    /**
+     * Extracts the command word (the first word) from the full user command.
+     *
+     * @param fullCommand The raw user input.
+     * @return The command word (e.g. {@code "todo"}, {@code "deadline"}, {@code "event"}).
+     */
     public static String getCommandWord(String fullCommand) {
         return fullCommand.split(" ")[0];
     }
 
+    /**
+     * Parses the index of a task from a user command.
+     * User input is expected to be 1-based, but internally the index is 0-based.
+     *
+     * @param fullCommand The raw user input.
+     * @return The 0-based index of the task.
+     * @throws KaneException If no index is provided or if the input is not an integer.
+     */
     public static int parseIndex(String fullCommand) throws KaneException {
         String[] parts = fullCommand.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
@@ -19,6 +37,15 @@ public class Parser {
         }
     }
 
+
+    /**
+     * Parses a {@code ToDo} task from a user command.
+     * The command should start with {@code "todo"} followed by the description.
+     *
+     * @param fullCommand The raw user input.
+     * @return A {@code ToDo} task.
+     * @throws KaneException If the description is missing or empty.
+     */
     public static ToDo parseTodo(String fullCommand) throws KaneException {
         if (fullCommand.trim().equals("todo")) {
             throw new KaneException("OOPS!!! The description of a todo cannot be empty.");
@@ -27,6 +54,14 @@ public class Parser {
         return new ToDo(description);
     }
 
+    /**
+     * Parses a {@code Deadline} task from a user command.
+     * The command should contain {@code "/by"} to indicate the deadline time.
+     *
+     * @param fullCommand The raw user input.
+     * @return A {@code Deadline} task.
+     * @throws KaneException If the description or deadline time is missing or empty.
+     */
     public static Deadline parseDeadline(String fullCommand) throws KaneException {
         if (!fullCommand.contains("/by")) {
             throw new KaneException("OOPS!!! The deadline must have a /by time.");
@@ -44,6 +79,14 @@ public class Parser {
         return new Deadline(description, by);
     }
 
+    /**
+     * Parses an {@code Event} task from a user command.
+     * The command should contain both {@code "/from"} and {@code "/to"} to indicate start and end times.
+     *
+     * @param fullCommand The raw user input.
+     * @return An {@code Event} task.
+     * @throws KaneException If the description, start time, or end time is missing or empty.
+     */
     public static Event parseEvent(String fullCommand) throws KaneException {
         if (!fullCommand.contains("/from") || !fullCommand.contains("/to")) {
             throw new KaneException("OOPS!!! The event must have both /from and /to times.");
