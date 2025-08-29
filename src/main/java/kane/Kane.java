@@ -1,5 +1,7 @@
 package kane;
 
+import java.util.ArrayList;
+
 public class Kane {
 
     private final Storage storage;
@@ -74,6 +76,11 @@ public class Kane {
                         tasks.addTask(newEvent);
                         ui.showTaskAdded(newEvent, tasks.getSize());
                         storage.save(tasks.getTasks());
+                        break;
+                    case "find":
+                        String keyword = Parser.parseFind(fullCommand);
+                        ArrayList<Task> foundTasks = tasks.findTasks(keyword);
+                        ui.showFoundTasks(foundTasks);
                         break;
                     default:
                         throw new KaneException("OOPS!!! I'm sorry, but I don't know what that means :-(");
