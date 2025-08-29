@@ -41,6 +41,7 @@ application {
 shadowJar {
     archiveBaseName = "kane"
     archiveClassifier = null
+    archiveFileName = 'kane.jar'
 }
 
 run{
