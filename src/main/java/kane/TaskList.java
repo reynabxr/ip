@@ -89,4 +89,23 @@ public class TaskList {
             throw new KaneException("OOPS!!! The task number is invalid.");
         }
     }
+
+    /**
+     * Finds and returns a list of tasks that contain the given keyword in their description.
+     * The search is case-insensitive.
+     *
+     * @param keyword The string to search for within the task descriptions.
+     * @return An ArrayList of tasks that match the search criteria.
+     */
+    public ArrayList<Task> findTasks(String keyword) {
+        ArrayList<Task> foundTasks = new ArrayList<>();
+        String lowerCaseKeyword = keyword.toLowerCase(); // For case-insensitive search
+
+        for (Task task : this.tasks) {
+            if (task.getDescription().toLowerCase().contains(lowerCaseKeyword)) {
+                foundTasks.add(task);
+            }
+        }
+        return foundTasks;
+    }
 }

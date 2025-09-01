@@ -110,4 +110,19 @@ public class Parser {
         }
         return new Event(description, from, to);
     }
+
+    /**
+     * Parses the find command to extract the search keyword.
+     *
+     * @param fullCommand The full user input string, e.g., "find book".
+     * @return The keyword to search for.
+     * @throws KaneException If the keyword is missing.
+     */
+    public static String parseFind(String fullCommand) throws KaneException {
+        String[] parts = fullCommand.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new KaneException("OOPS!!! The keyword for find cannot be empty.");
+        }
+        return parts[1].trim();
+    }
 }

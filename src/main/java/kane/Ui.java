@@ -115,4 +115,21 @@ public class Ui {
     public void close() {
         scanner.close();
     }
+
+    /**
+     * Displays the list of tasks found from a search.
+     * If no tasks are found, it prints a corresponding message.
+     *
+     * @param tasks The list of tasks that matched the search keyword.
+     */
+    public void showFoundTasks(ArrayList<Task> tasks) {
+        System.out.println("Here are the matching tasks in your list:");
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks found matching your keyword.");
+        } else {
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + "." + tasks.get(i));
+            }
+        }
+    }
 }
