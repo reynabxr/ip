@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles loading and saving of tasks to a file on disk.
+ * Provides persistence support so that tasks are stored across program runs.
+ */
 public class Storage {
     private final String filePath;
 
@@ -13,6 +17,13 @@ public class Storage {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the storage file.
+     * If the file does not exist, it will be created and an empty task list returned.
+     *
+     * @return a list of tasks loaded from the file.
+     * @throws IOException if there is an error reading or creating the file.
+     */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -60,6 +71,11 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Saves the given list of tasks to the storage file.
+     *
+     * @param tasks list of tasks to save.
+     */
     public void save(ArrayList<Task> tasks) {
         try {
             FileWriter writer = new FileWriter(filePath);

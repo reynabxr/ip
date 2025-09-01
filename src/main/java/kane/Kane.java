@@ -7,7 +7,7 @@ public class Kane {
     private final Ui ui;
 
     /**
-     * Constructor for the kane.Kane application.
+     * Constructor for the application.
      * @param filePath The path to the file where tasks are stored.
      */
     public Kane(String filePath) {
@@ -87,6 +87,7 @@ public class Kane {
     }
 
     public static void main(String[] args) {
+
         new Kane("data/tasks.txt").run();
     }
 }
