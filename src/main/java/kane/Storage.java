@@ -54,15 +54,15 @@ public class Storage {
         Task task = null;
 
         switch (type) {
-            case "T":
-                task = new ToDo(description);
-                break;
-            case "D":
-                task = new Deadline(description, parts[3]);
-                break;
-            case "E":
-                task = new Event(description, parts[3], parts[4]);
-                break;
+        case "T":
+            task = new ToDo(description);
+            break;
+        case "D":
+            task = new Deadline(description, parts[3]);
+            break;
+        case "E":
+            task = new Event(description, parts[3], parts[4]);
+            break;
         }
 
         if (task != null && isDone) {
