@@ -9,7 +9,7 @@ public class Kane {
     private final Ui ui;
 
     /**
-     * Constructor for the kane.Kane application.
+     * Constructor for the application.
      * @param filePath The path to the file where tasks are stored.
      */
     public Kane(String filePath) {
@@ -24,76 +24,76 @@ public class Kane {
     }
 
     /**
-     * Starts the main loop of the application.
+     * Processes a single user command and returns a response string for the GUI.
+     * @param input The full command from the user.
+     * @return A string containing the chatbot's response.
      */
-    public void run() {
-        ui.showWelcome();
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                String commandWord = Parser.getCommandWord(fullCommand);
+    public String getResponse(String input) {
+        try {
+            String commandWord = Parser.getCommandWord(input);
 
-                switch (commandWord) {
-                    case "bye":
-                        isExit = true;
-                        break;
-                    case "list":
-                        ui.showTaskList(tasks.getTasks());
-                        break;
-                    case "mark":
-                        int markIndex = Parser.parseIndex(fullCommand);
-                        Task markedTask = tasks.markTask(markIndex);
-                        ui.showTaskMarked(markedTask);
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "unmark":
-                        int unmarkIndex = Parser.parseIndex(fullCommand);
-                        Task unmarkedTask = tasks.unmarkTask(unmarkIndex);
-                        ui.showTaskUnmarked(unmarkedTask);
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "delete":
-                        int deleteIndex = Parser.parseIndex(fullCommand);
-                        Task deletedTask = tasks.deleteTask(deleteIndex);
-                        ui.showTaskDeleted(deletedTask, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "todo":
-                        Task newTodo = Parser.parseTodo(fullCommand);
-                        tasks.addTask(newTodo);
-                        ui.showTaskAdded(newTodo, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "deadline":
-                        Task newDeadline = Parser.parseDeadline(fullCommand);
-                        tasks.addTask(newDeadline);
-                        ui.showTaskAdded(newDeadline, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "event":
-                        Task newEvent = Parser.parseEvent(fullCommand);
-                        tasks.addTask(newEvent);
-                        ui.showTaskAdded(newEvent, tasks.getSize());
-                        storage.save(tasks.getTasks());
-                        break;
-                    case "find":
-                        String keyword = Parser.parseFind(fullCommand);
-                        ArrayList<Task> foundTasks = tasks.findTasks(keyword);
-                        ui.showFoundTasks(foundTasks);
-                        break;
-                    default:
-                        throw new KaneException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+            switch (commandWord) {
+            case "bye":
+                return "Goodbye. Hope to see you again soon!";
+            case "list":
+                StringBuilder listBuilder = new StringBuilder("Here are the tasks in your list:\n");
+                ArrayList<Task> currentTasks = tasks.getTasks();
+                for (int i = 0; i < currentTasks.size(); i++) {
+                    listBuilder.append(i + 1).append(". ").append(currentTasks.get(i).toString()).append("\n");
                 }
-            } catch (KaneException e) {
-                ui.showError(e.getMessage());
+                return listBuilder.toString();
+            case "mark":
+                int markIndex = Parser.parseIndex(input);
+                Task markedTask = tasks.markTask(markIndex);
+                storage.save(tasks.getTasks());
+                return "Nice! I've marked this task as done:\n  " + markedTask;
+            case "unmark":
+                int unmarkIndex = Parser.parseIndex(input);
+                Task unmarkedTask = tasks.unmarkTask(unmarkIndex);
+                storage.save(tasks.getTasks());
+                return "OK, I've marked this task as not done yet:\n  " + unmarkedTask;
+            case "delete":
+                int deleteIndex = Parser.parseIndex(input);
+                Task deletedTask = tasks.deleteTask(deleteIndex);
+                storage.save(tasks.getTasks());
+                return "Noted. I've removed this task:\n  " + deletedTask
+                        + "\nNow you have " + tasks.getSize() + " tasks in the list.";
+            case "todo":
+                Task newTodo = Parser.parseTodo(input);
+                tasks.addTask(newTodo);
+                storage.save(tasks.getTasks());
+                return "Got it. I've added this task:\n  " + newTodo
+                        + "\nNow you have " + tasks.getSize() + " tasks in the list.";
+            case "deadline":
+                Task newDeadline = Parser.parseDeadline(input);
+                tasks.addTask(newDeadline);
+                storage.save(tasks.getTasks());
+                return "Got it. I've added this task:\n  " + newDeadline
+                        + "\nNow you have " + tasks.getSize() + " tasks in the list.";
+            case "event":
+                Task newEvent = Parser.parseEvent(input);
+                tasks.addTask(newEvent);
+                storage.save(tasks.getTasks());
+                return "Got it. I've added this task:\n  " + newEvent
+                        + "\nNow you have " + tasks.getSize() + " tasks in the list.";
+            case "find":
+                String keyword = Parser.parseFind(input);
+                ArrayList<Task> foundTasks = tasks.findTasks(keyword);
+                // Build a string for the found tasks
+                if (foundTasks.isEmpty()) {
+                    return "Sorry, I couldn't find any matching tasks in your list.";
+                } else {
+                    StringBuilder findBuilder = new StringBuilder("Here are the matching tasks in your list:\n");
+                    for (int i = 0; i < foundTasks.size(); i++) {
+                        findBuilder.append(i + 1).append(". ").append(foundTasks.get(i).toString()).append("\n");
+                    }
+                    return findBuilder.toString();
+                }
+            default:
+                throw new KaneException("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
+        } catch (KaneException e) {
+            return e.getMessage();
         }
-        ui.showGoodbye();
-        ui.close();
-    }
-
-    public static void main(String[] args) {
-        new Kane("data/tasks.txt").run();
     }
 }
