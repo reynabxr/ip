@@ -6,6 +6,13 @@ package kane;
  */
 public class Parser {
 
+    private static final String TODO_COMMAND = "todo";
+    private static final String DEADLINE_COMMAND = "deadline";
+    private static final String EVENT_COMMAND = "event";
+    private static final String DEADLINE_DELIMITER = "/by";
+    private static final String EVENT_FROM_DELIMITER = "/from";
+    private static final String EVENT_TO_DELIMITER = "/to";
+
     /**
      * Extracts the command word (the first word) from the full user command.
      *
@@ -47,10 +54,10 @@ public class Parser {
      * @throws KaneException If the description is missing or empty.
      */
     public static ToDo parseTodo(String fullCommand) throws KaneException {
-        if (fullCommand.trim().equals("todo")) {
+        String description = fullCommand.substring(TODO_COMMAND.length()).trim();
+        if (description.isEmpty()) {
             throw new KaneException("OOPS!!! The description of a todo cannot be empty.");
         }
-        String description = fullCommand.substring(4).trim();
         return new ToDo(description);
     }
 
@@ -63,12 +70,14 @@ public class Parser {
      * @throws KaneException If the description or deadline time is missing or empty.
      */
     public static Deadline parseDeadline(String fullCommand) throws KaneException {
-        if (!fullCommand.contains("/by")) {
+        if (!fullCommand.contains(DEADLINE_DELIMITER)) {
             throw new KaneException("OOPS!!! The deadline must have a /by time.");
         }
-        String[] parts = fullCommand.substring(9).split("/by", 2);
+        String content = fullCommand.substring(DEADLINE_COMMAND.length()).trim();
+        String[] parts = content.split(DEADLINE_DELIMITER, 2);
+
         String description = parts[0].trim();
-        if (parts.length < 2) {
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new KaneException("OOPS!!! The deadline time is missing after /by.");
         }
         String by = parts[1].trim();
@@ -88,25 +97,30 @@ public class Parser {
      * @throws KaneException If the description, start time, or end time is missing or empty.
      */
     public static Event parseEvent(String fullCommand) throws KaneException {
-        if (!fullCommand.contains("/from") || !fullCommand.contains("/to")) {
+        if (!fullCommand.contains(EVENT_FROM_DELIMITER) || !fullCommand.contains(EVENT_TO_DELIMITER)) {
             throw new KaneException("OOPS!!! The event must have both /from and /to times.");
         }
-        String[] firstSplit = fullCommand.substring(6).split("/from", 2);
-        String description = firstSplit[0].trim();
+        String content = fullCommand.substring(EVENT_COMMAND.length()).trim();
+        String[] parts = content.split(EVENT_FROM_DELIMITER, 2);
 
-        if (firstSplit.length < 2) {
-            throw new KaneException("OOPS!!! Missing event times after /from.");
+        String description = parts[0].trim();
+        if (description.isEmpty()) {
+            throw new KaneException("OOPS!!! The description cannot be empty.");
         }
 
-        String[] secondSplit = firstSplit[1].split("/to", 2);
-        String from = secondSplit[0].trim();
-        if (secondSplit.length < 2) {
+        if (parts.length < 2 || !parts[1].contains(EVENT_TO_DELIMITER)) {
+            throw new KaneException("OOPS!!! Missing event times after /from or /to.");
+        }
+
+        String[] timeParts = parts[1].split(EVENT_TO_DELIMITER, 2);
+        String from = timeParts[0].trim();
+        if (timeParts.length < 2 || timeParts[1].trim().isEmpty()) {
             throw new KaneException("OOPS!!! Missing event end time after /to.");
         }
-        String to = secondSplit[1].trim();
+        String to = timeParts[1].trim();
 
-        if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-            throw new KaneException("OOPS!!! The description, from, and to cannot be empty.");
+        if (from.isEmpty()) {
+            throw new KaneException("OOPS!!! The 'from' time cannot be empty.");
         }
         return new Event(description, from, to);
     }
