@@ -50,4 +50,20 @@ public class Task {
     public String toString() {
         return String.format("[%s] [%s] %s", this.type.getCode(), this.getStatusIcon(), this.description);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Task)) {
+            return false;
+        }
+        Task other = (Task) obj;
+        return (this.type == other.type) && (this.description.equals(other.description));
+        }
+
 }
+
+
+

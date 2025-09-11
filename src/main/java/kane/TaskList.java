@@ -18,12 +18,16 @@ public class TaskList {
     }
 
     /**
-     * Adds a task to the task list.
+     * Adds a task to the list, checking for duplicates first.
      *
-     * @param task task to be added.
+     * @param task The task to be added.
+     * @throws DuplicateTaskException If an identical task already exists in the list.
      */
-    public void addTask(Task task) {
-        tasks.add(task);
+    public void addTask(Task task) throws DuplicateTaskException {
+        if (this.tasks.contains(task)) {
+            throw new DuplicateTaskException("OOPS!!! This task is already in your list.");
+        }
+        this.tasks.add(task);
     }
 
     /**

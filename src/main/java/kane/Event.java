@@ -41,4 +41,13 @@ public class Event extends Task {
     public String toFileString() {
         return String.format("%s | %s | %s", super.toFileString(), from.format(INPUT_FORMAT), to.format(INPUT_FORMAT));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Event other = (Event) obj;
+        return this.from.equals(other.from) && this.to.equals(other.to);
+    }
 }
