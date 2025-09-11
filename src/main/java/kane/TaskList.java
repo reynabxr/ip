@@ -34,6 +34,8 @@ public class TaskList {
      * @throws KaneException if the index is invalid.
      */
     public Task deleteTask(int taskIndex) throws KaneException {
+        assert taskIndex > 0 : "Task index must be positive.";
+
         validateIndex(taskIndex);
         return tasks.remove(taskIndex);
     }
@@ -46,6 +48,9 @@ public class TaskList {
      * @throws KaneException if the index is invalid.
      */
     public Task markTask(int taskIndex) throws KaneException {
+        // Assertion: The index received from the parser should always be positive.
+        assert taskIndex > 0 : "Task index must be positive.";
+
         validateIndex(taskIndex);
         Task t = tasks.get(taskIndex);
         t.markDone();
@@ -60,6 +65,8 @@ public class TaskList {
      * @throws KaneException if the index is invalid.
      */
     public Task unmarkTask(int taskIndex) throws KaneException {
+        assert taskIndex > 0 : "Task index must be positive.";
+
         validateIndex(taskIndex);
         Task t = tasks.get(taskIndex);
         t.markUndone();
