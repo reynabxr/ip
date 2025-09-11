@@ -29,6 +29,9 @@ public class Parser {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new KaneException("OOPS!!! Please provide a task number.");
         }
+
+        assert parts.length == 2 : "parseIndex should only be called with commands that have an index.";
+
         try {
             // User input is 1-based, internal is 0-based
             return Integer.parseInt(parts[1].trim()) - 1;
